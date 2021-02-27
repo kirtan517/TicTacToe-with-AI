@@ -77,7 +77,6 @@ def Computer(turn, visited):
     return best_score
 
 def best_move(turn,visited):
-    
     position = (0,0)
     best_score= -1*turn*math.inf
     for i in box_center_cords:
