@@ -20,7 +20,6 @@ GREY = (128, 128, 128)
 TURQUOISE = (64, 224, 208)
 turn = True
 
-
 WINNER_FONT = pygame.font.SysFont('comicsans', 100)
 pygame.display.set_caption('Tic Tac Toe with AI')
 font = pygame.font.Font(None, 20)
@@ -32,6 +31,9 @@ winner_dec = 0
 
 Score_Circle = 0
 Score_Cross = 0
+
+AI = True
+AITURN=True
 
 
 
@@ -128,11 +130,18 @@ def reset():
     global turn
     global draw_objects
     global winner_dec
+    global AI
+    global AITURN
     winner_dec =0
     draw_objects =[]
     visited = {}
     results = {"x": {100: 0, 300: 0, 500: 0}, "y": {100: 0, 300: 0, 500: 0}}
     draw(win)
+    if AI:
+        AI=False
+    else:
+        AI =True
+        AITURN = True
 
 
 
@@ -142,6 +151,8 @@ def main():
     global turn
     global Score_Circle
     global Score_Cross
+    global AITURN
+    global AI
     while run:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -150,25 +161,47 @@ def main():
                 if event.button == 1:
                     xpos, ypos = pygame.mouse.get_pos()
                     xpos, ypos = position(xpos, ypos)
-            elif event.type == pygame.MOUSEBUTTONUP:
-                if (xpos, ypos) not in visited:
-                    visited[(xpos, ypos)] = 0
-                    if event.button == 1:
-                        if turn:
-                            circle_obj = circle(xpos, ypos)
-                            draw_objects.append(circle_obj.draw_circle)
-                            visited[(xpos, ypos)] = 1
-                            turn = False
-                            result(xpos, ypos)
-                        
-                            xpos,ypos=best_move(-1,visited)
+
+            if AI :
+                if AITURN:
+                    apos, bpos = best_move(1, visited)
+                    circle_obj = circle(apos, bpos)
+                    draw_objects.append(circle_obj.draw_circle)
+                    if not len(visited)==9:
+                        visited[(apos, bpos)] = 1
+                    AITURN=False
+                    if not len(visited) == 9:
+                        winner_dec = result(apos, bpos)
+                if event.type == pygame.MOUSEBUTTONUP:
+                    if event.button==1:
+                        if not (xpos,ypos) in visited:
                             cross_obj = cross(xpos, ypos)
                             draw_objects.append(cross_obj.draw_cross)
-                            if not len(visited) == 9:
-                                visited[(xpos, ypos)] = -1
+                            visited[(xpos, ypos)] = -1
                             turn = True
-                    if  not len(visited)==9:
-                        winner_dec = result(xpos, ypos)
+                            if  not len(visited)==9:
+                                winner_dec = result(xpos, ypos)
+                            AITURN =True
+
+            else:  
+                if event.type == pygame.MOUSEBUTTONUP:
+                        if event.button == 1:
+                            if not (xpos,ypos) in visited:
+                                circle_obj = circle(xpos, ypos)
+                                draw_objects.append(circle_obj.draw_circle)
+                                visited[(xpos, ypos)] = 1
+                                turn = False
+                                if not len(visited) == 9:
+                                    winner_dec=result(xpos, ypos)
+                            
+                                xpos,ypos=best_move(-1,visited)
+                                cross_obj = cross(xpos, ypos)
+                                draw_objects.append(cross_obj.draw_cross)
+                                if not len(visited) == 9:
+                                    visited[(xpos, ypos)] = -1
+                                turn = True
+                                if  not len(visited)==9:
+                                    winner_dec = result(xpos, ypos)
         draw(win)
         if(winner_dec == 1):
             reset()
