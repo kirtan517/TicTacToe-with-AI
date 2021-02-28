@@ -35,17 +35,6 @@ Score_Cross = 0
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 def draw_score(text,xpos,ypos):
     draw_text = font.render(text, 1, WHITE)
     win.blit(draw_text, (xpos, ypos))
@@ -56,7 +45,7 @@ def draw_winner(text):
     win.blit(draw_text, (WIDTH/2 - draw_text.get_width() /
                          2, HEIGHT/2 - draw_text.get_height()/2))
     pygame.display.update()
-    pygame.time.delay(1500)
+    pygame.time.delay(2500)
 
 win = pygame.display.set_mode((WIDTH, HEIGHT))
 CORDS = [[(WIDTH/3, 0), (WIDTH/3, HEIGHT)], [(WIDTH/3*2, 0), (WIDTH/3*2, HEIGHT)],
@@ -88,7 +77,7 @@ class cross():
 def draw(win):
     win.fill(BLACK)
     draw_score("Score Circle :"+str(Score_Circle),0,0)
-    draw_score("Score Cross :"+str(Score_Cross),200,0)
+    draw_score("Score Cross :"+str(Score_Cross),500,0)
     for start, end in CORDS:
         pygame.draw.line(win, WHITE, start, end, 6)
     
@@ -170,15 +159,16 @@ def main():
                             draw_objects.append(circle_obj.draw_circle)
                             visited[(xpos, ypos)] = 1
                             turn = False
+                            result(xpos, ypos)
                         
                             xpos,ypos=best_move(-1,visited)
                             cross_obj = cross(xpos, ypos)
                             draw_objects.append(cross_obj.draw_cross)
-                            visited[(xpos, ypos)] = -1
+                            if not len(visited) == 9:
+                                visited[(xpos, ypos)] = -1
                             turn = True
-                    
+                    if  not len(visited)==9:
                         winner_dec = result(xpos, ypos)
-                        
         draw(win)
         if(winner_dec == 1):
             reset()
