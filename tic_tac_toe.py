@@ -1,11 +1,12 @@
+# importing libraries
 from min_max import best_move
 import pygame
 import math
 import time
-
 from pygame.event import clear
 pygame.init()
 
+# Global Variables
 WIDTH = 600
 HEIGHT = 600
 RED = (255, 0, 0)
@@ -36,40 +37,56 @@ Score_Cross = 0
 AITURN =True
 AI = True
 
+win = pygame.display.set_mode((WIDTH, HEIGHT))
+CORDS = [[(WIDTH/3, 0), (WIDTH/3, HEIGHT)], [(WIDTH/3*2, 0), (WIDTH/3*2, HEIGHT)],
+         [(0, HEIGHT/3), (WIDTH, HEIGHT/3)], [(0, HEIGHT/3*2), (WIDTH, HEIGHT/3*2)]]
 
 def draw_score(text,xpos,ypos):
+    """
+    print scores on window
+    """
     draw_text = font.render(text, 1, WHITE)
     win.blit(draw_text, (xpos, ypos))
    
 
 def draw_winner(text):
+    """
+    display winner at the end of game on window
+    """
     draw_text = WINNER_FONT.render(text, 1, WHITE)
     win.blit(draw_text, (WIDTH/2 - draw_text.get_width() /
                          2, HEIGHT/2 - draw_text.get_height()/2))
     pygame.display.update()
     pygame.time.delay(1000)
 
-win = pygame.display.set_mode((WIDTH, HEIGHT))
-CORDS = [[(WIDTH/3, 0), (WIDTH/3, HEIGHT)], [(WIDTH/3*2, 0), (WIDTH/3*2, HEIGHT)],
-         [(0, HEIGHT/3), (WIDTH, HEIGHT/3)], [(0, HEIGHT/3*2), (WIDTH, HEIGHT/3*2)]]
-
-
 class circle():
+    """
+    define center position of circle  
+    """
     def __init__(self, x, y):
         self.x = x
         self.y = y
 
     def draw_circle(self):
+        """
+        draw cirlce
+        """
         pygame.draw.circle(win, WHITE, (self.x, self.y), 50, 6)
 
 
 class cross():
+    """
+    define center position of cross  
+    """
     def __init__(self, x, y):
         self.x = x
         self.y = y
         self.Length = 50/math.sqrt(2)
 
     def draw_cross(self):
+        """
+        draw cross
+        """
         pygame.draw.line(win, WHITE, (self.x-self.Length, self.y -
                                       self.Length), (self.x+self.Length, self.y+self.Length), 6)
         pygame.draw.line(win, WHITE, (self.x+self.Length, self.y-self.Length), (self.x-self.Length, self.y +
